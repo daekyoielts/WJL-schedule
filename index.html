@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CD WJL 8월 근무 스케줄 신청서</title>
+<title>CD WJL 9월 근무 스케줄 신청서</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
@@ -488,9 +488,9 @@
 
 <div class="card" id="formCard">
   <div class="card-header">
-    <h1>CD WJL 8월 근무 스케줄 신청서</h1>
+    <h1>CD WJL 9월 근무 스케줄 신청서</h1>
     <p>근무 가능한 날짜를 클릭하고 시간대를 선택해 주세요.<br>여러 날짜를 중복 선택할 수 있습니다.</p>
-    <p style="margin-top:6px;font-size:12px;opacity:0.9;">※ 7/19 일요일까지 제출 부탁드립니다.</p>
+    <p style="margin-top:6px;font-size:12px;opacity:0.9;">※ 8/21 금요일까지 제출 부탁드립니다.</p>
   </div>
 
   <div class="name-section">
@@ -570,11 +570,12 @@
 </div>
 
 <script>
-  // 2026년 8월: 1일이 토요일(index 6)
+  // 2026년 9월: 1일이 화요일(index 2)
   // 공휴일
   const holidays = {
-    15: '광복절',
-    17: '대체휴일'
+    24: '공휴일',
+    25: '추석',
+    26: '공휴일'
   };
 
   const selections = {}; // { day: { times: [...], memo: '' } }
@@ -585,9 +586,9 @@
 
   function buildCalendar() {
     const grid = document.getElementById('calGrid');
-    // Aug 1 = Saturday = index 6
-    const startOffset = 6;
-    const totalDays = 31;
+    // Sep 1 = Tuesday = index 2
+    const startOffset = 2;
+    const totalDays = 30;
 
     // Empty cells before day 1
     for (let i = 0; i < startOffset; i++) {
@@ -597,7 +598,7 @@
     }
 
     for (let d = 1; d <= totalDays; d++) {
-      const colIndex = (6 + d - 1) % 7;
+      const colIndex = (2 + d - 1) % 7;
       const isSun = colIndex === 0;
       const isSat = colIndex === 6;
       const isHoliday = !!holidays[d];
@@ -610,7 +611,7 @@
       btn.id = 'day-' + d;
 
       // 화=2, 수=3, 목=4, 금=5, 토=6, 일=0 활성화 (월=1 비활성)
-      const allowedCols = [2, 3, 4, 5, 6, 0];
+      const allowedCols = [0, 2, 3, 4, 5, 6];
       if (!allowedCols.includes(colIndex)) {
         btn.disabled = true;
       } else {
@@ -639,9 +640,9 @@
     const existing = selections[day] || {};
     tempChecked = [...(existing.times || [])];
 
-    const colIndex = (6 + day - 1) % 7;
+    const colIndex = (2 + day - 1) % 7;
     document.getElementById('popupDateLabel').textContent =
-      `8월 ${day}일 (${DOW[colIndex]})${holidays[day] ? ' · ' + holidays[day] : ''}`;
+      `9월 ${day}일 (${DOW[colIndex]})${holidays[day] ? ' · ' + holidays[day] : ''}`;
 
     ['opt-am','opt-pm','opt-all'].forEach(id => {
       const label = document.getElementById(id);
@@ -720,7 +721,7 @@
     list.className = 'summary-list';
 
     days.forEach(d => {
-      const colIndex = (6 + d - 1) % 7;
+      const colIndex = (2 + d - 1) % 7;
       const data = selections[d];
       const item = document.createElement('div');
       item.className = 'summary-item';
@@ -730,7 +731,7 @@
 
       const dateSpan = document.createElement('div');
       dateSpan.className = 's-date';
-      dateSpan.textContent = `8/${d} (${DOW[colIndex]})`;
+      dateSpan.textContent = `9/${d} (${DOW[colIndex]})`;
 
       const timesSpan = document.createElement('div');
       timesSpan.className = 's-times';
@@ -782,10 +783,10 @@
     }
 
     const schedules = days.map(d => {
-      const colIndex = (6 + d - 1) % 7;
+      const colIndex = (2 + d - 1) % 7;
       const data = selections[d];
       return {
-        date: `8/${d} (${DOW[colIndex]})`,
+        date: `9/${d} (${DOW[colIndex]})`,
         times: data.times.join(', ') || '시간대 미선택',
         memo: data.memo || ''
       };
@@ -795,7 +796,7 @@
     btn.textContent = '제출 중...';
     btn.disabled = true;
 
-    fetch('https://script.google.com/macros/s/AKfycbxzv_XjLSRbN3mTTjGqUqevTSQA04d0Non0kmTe77f_Pv0ESYMyHDo_91evGtxopo4K/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxlbIi8tcufV-B-onrHLu9JXRWcl6G1qPZr0KdLdj8ct7N9MEmpwCEwKyb-FNQOQY5Kiw/exec', {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
@@ -809,10 +810,10 @@
       const detail = document.getElementById('resultDetail');
       let html = `<div class="rd-item" style="font-weight:600;color:#1a1a2e;margin-bottom:4px;">이름: ${name}</div>`;
       days.forEach(d => {
-        const colIndex = (6 + d - 1) % 7;
+        const colIndex = (2 + d - 1) % 7;
         const data = selections[d];
         const timeStr = data.times.length > 0 ? data.times.join(', ') : '시간대 미선택';
-        html += `<div class="rd-item">8/${d} (${DOW[colIndex]}) — ${timeStr}${data.memo ? '<br><span style="font-size:11px;color:#999;">메모: ' + data.memo + '</span>' : ''}</div>`;
+        html += `<div class="rd-item">9/${d} (${DOW[colIndex]}) — ${timeStr}${data.memo ? '<br><span style="font-size:11px;color:#999;">메모: ' + data.memo + '</span>' : ''}</div>`;
       });
       detail.innerHTML = html;
     })
